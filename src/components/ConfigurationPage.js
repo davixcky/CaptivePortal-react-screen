@@ -3,11 +3,8 @@ import {
     Box,
     Button,
     Flex,
-    FormControl,
-    FormLabel,
     Heading,
     IconButton,
-    Input,
     Link,
     Spinner,
     Text,
@@ -24,7 +21,7 @@ const ConfigurationArea = () => {
 
     const cleanNetworks = (networks) => {
         const unique = (value, index, self) => {
-            const findIndex = (element) => element.SSID === value.SSID;
+            const findIndex = (element) => element.ssid === value.ssid;
             return self.findIndex(findIndex) === index;
         };
 
@@ -40,7 +37,7 @@ const ConfigurationArea = () => {
                 return response.json()
             })
             .then(data => {
-                setNetworks(cleanNetworks(data.networks || []));
+                setNetworks(cleanNetworks(data || []));
                 setIsLoading(false);
             })
             .catch(err => {

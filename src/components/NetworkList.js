@@ -7,8 +7,8 @@ const NetworkList = ({networks, formLabel, isInvalid, onChange}) => {
             <FormLabel>{formLabel}</FormLabel>
             <Select placeholder="Select Network" mb={4} onChange={onChange}>
                 {
-                    networks.map(({SSID}) => {
-                        return <option value={SSID} key={SSID}> {SSID} </option>
+                    networks.map(({ssid}) => {
+                        return <option value={ssid} key={ssid}> {ssid} </option>
                     })
                 }
             </Select>
