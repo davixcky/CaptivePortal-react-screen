@@ -108,6 +108,7 @@ const ConfigurationPanel = ({networks}) => {
     const [selectedNetwork, setSelectedNetwork] = useState('');
     const [deviceName, setDeviceName] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     // Invalid states
     const [invalidFields, setInvalidFields] = useState({});
@@ -134,11 +135,12 @@ const ConfigurationPanel = ({networks}) => {
 
         if (numberErrors > 0) return;
 
-        const url = `http://192.168.4.1/api/configuration?device_name=${deviceName}&ssid=${selectedNetwork}&password=${password}`;
+        const url = `http://192.168.4.1/api/connect?device_name=${deviceName}&ssid=${selectedNetwork}&password=${password}`;
         uploadSettings(url);
     }
 
     const uploadSettings = (url) => {
+        setIsLoading(true);
         fetch(url, {
             method: 'POST',
         })
@@ -150,6 +152,9 @@ const ConfigurationPanel = ({networks}) => {
             })
             .catch((err) => {
                 console.log(err);
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
     }
 
@@ -157,18 +162,18 @@ const ConfigurationPanel = ({networks}) => {
         <Box my={8} textAlign='left'>
             <form>
                 <CustomInput inputType="text" formLabel="Device name"
-                             styles={{mb: 4, placeholder: "uninorte_expofisica"}}
+                             styles={{mb: 4, placeholder: "uninorte_expofisica", isDisabled: isLoading}}
                              onChange={(e) => setDeviceName(e.target.value)} isInvalid={invalidFields.deviceName}/>
 
                 <NetworkList networks={networks} formLabel="Select the SSID to connect"
                              onChange={(e) => setSelectedNetwork(e.target.value)}
-                             isInvalid={invalidFields.selectedNetwork}/>
+                             isInvalid={invalidFields.selectedNetwork} isDisabled={isLoading}/>
 
                 <CustomInput inputType="password" formLabel="Password"
-                             styles={{mb: 4, placeholder: "******"}}
+                             styles={{mb: 4, placeholder: "******", isDisabled: isLoading}}
                              onChange={(e) => setPassword(e.target.value)} isInvalid={invalidFields.password}/>
 
-                <Button colorScheme="teal" width='full' mb={2} mt={4} onClick={onSubmit}>Connect</Button>
+                <Button colorScheme="teal" width='full' mb={2} mt={4} onClick={onSubmit} isLoading={isLoading}>Connect</Button>
             </form>
         </Box>
     )
